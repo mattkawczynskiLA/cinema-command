@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LA Cinema Command</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .theater-frame { width: 100%; height: 70vh; border: none; border-radius: 12px; }
+        .tab-active { border-bottom: 4px solid #6366f1; color: #6366f1; }
+        button { touch-action: manipulation; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen">
+
+    <div class="p-6 bg-slate-800 border-b border-slate-700">
+        <h1 class="text-2xl font-black uppercase tracking-tighter italic text-indigo-400">Cinema Command</h1>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Matthew's LA Screening Tracker</p>
+    </div>
+
+    <div class="flex overflow-x-auto bg-slate-800 sticky top-0 z-50 border-b border-slate-700">
+        <button onclick="showTheater('bev')" id="btn-bev" class="tab-btn tab-active px-6 py-4 font-black uppercase text-xs whitespace-nowrap">New Beverly</button>
+        <button onclick="showTheater('academy')" id="btn-academy" class="tab-btn px-6 py-4 font-black uppercase text-xs whitespace-nowrap">Academy Museum</button>
+        <button onclick="showTheater('watchlist')" id="btn-watchlist" class="tab-btn px-6 py-4 font-black uppercase text-xs whitespace-nowrap">My Watchlist</button>
+    </div>
+
+    <div class="p-4">
+        <div id="section-bev" class="theater-section">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-[10px] font-bold bg-indigo-600 px-2 py-1 rounded">LIVE CALENDAR</span>
+                <a href="https://thenewbeverly.com/schedule/" target="_blank" class="text-[10px] text-indigo-300 underline font-bold">OPEN FULL SITE</a>
+            </div>
+            <iframe src="https://thenewbeverly.com/schedule/" class="theater-frame bg-white"></iframe>
+        </div>
+
+        <div id="section-academy" class="theater-section hidden">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-[10px] font-bold bg-amber-600 px-2 py-1 rounded">ACADEMY CALENDAR</span>
+                <a href="https://www.academymuseum.org/en/calendar" target="_blank" class="text-[10px] text-amber-300 underline font-bold">OPEN FULL SITE</a>
+            </div>
+            <iframe src="https://www.academymuseum.org/en/calendar" class="theater-frame bg-white"></iframe>
+        </div>
+
+        <div id="section-watchlist" class="theater-section hidden">
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
+                <h3 class="text-lg font-bold mb-4">Must-Watch on 35mm</h3>
+                <textarea id="watchlist-input" placeholder="Enter movie titles to watch for..." class="w-full h-40 bg-slate-900 border border-slate-600 rounded-xl p-4 text-sm mb-4 outline-none focus:border-indigo-500"></textarea>
+                <button onclick="saveWatchlist()" class="w-full bg-indigo-600 py-3 rounded-xl font-black uppercase text-xs">Update My List</button>
+                <p class="text-[10px] text-slate-500 mt-4 leading-relaxed">Tip: Keep this list updated. In the next version, I can build an AI script that scans the calendars above and highlights matches for these titles.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTheater(id) {
+            // Hide all sections
+            document.querySelectorAll('.theater-section').forEach(s => s.classList.add('hidden'));
+            // Remove active style from all tabs
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            
+            // Show selected
+            document.getElementById('section-' + id).classList.remove('hidden');
+            document.getElementById('btn-' + id).classList.add('tab-active');
+        }
+
+        function saveWatchlist() {
+            const list = document.getElementById('watchlist-input').value;
+            localStorage.setItem('Matthew_Cinema_Watchlist', list);
+            alert("Watchlist updated!");
+        }
+
+        // Load saved watchlist on start
+        window.onload = () => {
+            const saved = localStorage.getItem('Matthew_Cinema_Watchlist');
+            if (saved) document.getElementById('watchlist-input').value = saved;
+        }
+    </script>
+</body>
+</html>
